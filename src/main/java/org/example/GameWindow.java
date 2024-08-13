@@ -1,21 +1,4 @@
 package org.example;
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
-
-import java.nio.*;
-
-import static org.lwjgl.glfw.Callbacks.*;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
-
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
 
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
@@ -32,8 +15,16 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class GameWindow {
 
-    // Ідентифікатор вікна
     private long window;
+
+    private Person person = new Person(
+            0.0f,
+            0.0f,
+            0.02f, new float[]{0.1f, 0.1f});
+
+    private Square square = new Square(
+            0.3f,
+            0.3f, new float[]{0.1f, 0.1f});
 
     public void run() {
         System.out.println("LWJGL " + Version.getVersion() + "!");
@@ -50,7 +41,7 @@ public class GameWindow {
     }
 
     private void init() {
-        // Налаштування GLFW, ініціалізація
+        // Ініціалізація GLFW
         GLFWErrorCallback.createPrint(System.err).set();
 
         if (!glfwInit()) {
@@ -98,11 +89,18 @@ public class GameWindow {
 
         // Головний цикл гри
         while (!glfwWindowShouldClose(window)) {
-            // Очистка екрану
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            // Очистка екрану перед рендерингом нового кадру
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // Зміна кольору фону (червоний, зелений, синій, прозорість)
+            // Зміна кольору фону
             glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
+
+            // Обробка вводу з клавіатури
+            processInput();
+
+            // Рендеринг квадрата
+            person.renderObject();
+            square.renderObject();
 
             // Заміна кадру
             glfwSwapBuffers(window);
@@ -112,8 +110,56 @@ public class GameWindow {
         }
     }
 
+    private void processInput() {
+        // Перевірка натискання клавіші ВЛІВО
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            person.moveX(-1f);
+            if (checkCollision()) {
+                person.moveX(1f); // Повернення назад у разі колізії
+            }
+        }
+
+        // Перевірка натискання клавіші ВПРАВО
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            person.moveX(1f);
+            if (checkCollision()) {
+                person.moveX(-1f); // Повернення назад у разі колізії
+            }
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            person.moveY(-1f);
+            if (checkCollision()) {
+                person.moveY(1f); // Повернення назад у разі колізії
+            }
+        }
+
+        // Перевірка натискання клавіші ВГОРУ
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+            person.moveY(1f);
+            if (checkCollision()) {
+                person.moveY(-1f); // Повернення назад у разі колізії
+            }
+        }
+    }
+
+    private boolean checkCollision() {
+        float[] personPos = {person.getPersonX(), person.getPersonY()};
+        float[] personSize = person.getSize();
+
+        float[] squarePos = {square.getSquareX(), square.getSquareY()};
+        float[] squareSize = square.getSize();
+
+        return (personPos[0] + personSize[0] > squarePos[0] - squareSize[0] &&
+                personPos[0] - personSize[0] < squarePos[0] + squareSize[0] &&
+                personPos[1] + personSize[1] > squarePos[1] - squareSize[1] &&
+                personPos[1] - personSize[1] < squarePos[1] + squareSize[1]);
+
+    }
+
+
+
     public static void main(String[] args) {
         new GameWindow().run();
     }
 }
-
