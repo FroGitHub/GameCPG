@@ -8,7 +8,7 @@ public class Square implements Object{
     private float squareX;
     private float squareY;
 
-    private float[] size = new float[2];
+    private float[] size;
 
 
     public Square(float squareX, float squareY, float[] size) {
@@ -31,7 +31,8 @@ public class Square implements Object{
         glEnd();
     }
 
-    public float getSquareX() {
+    @Override
+    public float getX() {
         return squareX;
     }
 
@@ -39,11 +40,12 @@ public class Square implements Object{
         this.squareX = squareX;
     }
 
-    public float getSquareY() {
+    @Override
+    public float getY() {
         return squareY;
     }
 
-    public void setSquareY(float squareY) {
+    public void setY(float squareY) {
         this.squareY = squareY;
     }
 

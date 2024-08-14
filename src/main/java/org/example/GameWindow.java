@@ -22,9 +22,14 @@ public class GameWindow {
             0.0f,
             0.02f, new float[]{0.1f, 0.1f});
 
-    private Square square = new Square(
-            0.3f,
-            0.3f, new float[]{0.1f, 0.1f});
+    private Square[] squares = new Square[]{
+            new Square(
+                    -0.5f,
+                    -0.5f, new float[]{0.1f, 0.1f}),
+            new Square(
+                    1.0f,
+                    1.0f, new float[]{0.1f, 0.1f})
+    };
 
     public void run() {
         System.out.println("LWJGL " + Version.getVersion() + "!");
@@ -98,10 +103,14 @@ public class GameWindow {
             // Обробка вводу з клавіатури
             processInput();
 
+
+            renderGrid(0.1f, 1.0f, 1.0f);
+
             // Рендеринг квадрата
             person.renderObject();
-            square.renderObject();
-
+            for(Square square : squares) {
+                square.renderObject();
+            }
             // Заміна кадру
             glfwSwapBuffers(window);
 
@@ -113,49 +122,59 @@ public class GameWindow {
     private void processInput() {
         // Перевірка натискання клавіші ВЛІВО
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-            person.moveX(-1f);
-            if (checkCollision()) {
-                person.moveX(1f); // Повернення назад у разі колізії
-            }
+            person.moveX(-1);
         }
 
         // Перевірка натискання клавіші ВПРАВО
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-            person.moveX(1f);
-            if (checkCollision()) {
-                person.moveX(-1f); // Повернення назад у разі колізії
-            }
+            person.moveX(1);
         }
 
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-            person.moveY(-1f);
-            if (checkCollision()) {
-                person.moveY(1f); // Повернення назад у разі колізії
-            }
+            person.moveY(-1);
         }
 
         // Перевірка натискання клавіші ВГОРУ
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-            person.moveY(1f);
-            if (checkCollision()) {
-                person.moveY(-1f); // Повернення назад у разі колізії
-            }
+            person.moveY(1);
         }
-    }
-
-    private boolean checkCollision() {
-        float[] personPos = {person.getPersonX(), person.getPersonY()};
-        float[] personSize = person.getSize();
-
-        float[] squarePos = {square.getSquareX(), square.getSquareY()};
-        float[] squareSize = square.getSize();
-
-        return (personPos[0] + personSize[0] > squarePos[0] - squareSize[0] &&
-                personPos[0] - personSize[0] < squarePos[0] + squareSize[0] &&
-                personPos[1] + personSize[1] > squarePos[1] - squareSize[1] &&
-                personPos[1] - personSize[1] < squarePos[1] + squareSize[1]);
 
     }
+
+    private void renderGrid(float gridSize, float width, float height) {
+        glColor3f(0.5f, 0.5f, 0.5f); // Колір сітки (сірий)
+        glBegin(GL_LINES);
+
+        // Вертикальні лінії
+        for (float x = -width; x <= width; x += gridSize) {
+            glVertex2f(x, -height);
+            glVertex2f(x, height);
+        }
+
+        // Горизонтальні лінії
+        for (float y = -height; y <= height; y += gridSize) {
+            glVertex2f(-width, y);
+            glVertex2f(width, y);
+        }
+
+        glEnd();
+    }
+
+
+//    private boolean checkCollision() {
+//        float[] personPos = {person.getPersonX(), person.getPersonY()};
+//        float[] personSize = person.getSize();
+//
+//
+//        float[] squarePos = {square.getSquareX(), square.getSquareY()};
+//        float[] squareSize = square.getSize();
+//
+//        return (personPos[0] + personSize[0] > squarePos[0] - squareSize[0] &&
+//                personPos[0] - personSize[0] < squarePos[0] + squareSize[0] &&
+//                personPos[1] + personSize[1] > squarePos[1] - squareSize[1] &&
+//                personPos[1] - personSize[1] < squarePos[1] + squareSize[1]);
+//
+//    }
 
 
 
