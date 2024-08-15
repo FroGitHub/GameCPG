@@ -56,6 +56,11 @@ public class Person implements Object, Movable, Camera {
     }
 
     @Override
+    public float[] getSize() {
+        return size;
+    }
+
+    @Override
     public float getX() {
         return personX;
     }
@@ -74,4 +79,20 @@ public class Person implements Object, Movable, Camera {
     public void moveCameraY(float upOrDown) {
         glTranslatef(0.0f, speed * -upOrDown, 0.0f);
     }
+
+    public boolean checkCollision(Object object) {
+        float[] personPos = {getX(), getY()};
+        float[] personSize = getSize();
+
+
+        float[] squarePos = {object.getX(), object.getY()};
+        float[] squareSize = object.getSize();
+
+        return (personPos[0] + personSize[0] > squarePos[0] - squareSize[0] &&
+                personPos[0] - personSize[0] < squarePos[0] + squareSize[0] &&
+                personPos[1] + personSize[1] > squarePos[1] - squareSize[1] &&
+                personPos[1] - personSize[1] < squarePos[1] + squareSize[1]);
+
+    }
+
 }

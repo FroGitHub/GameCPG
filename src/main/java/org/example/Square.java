@@ -36,24 +36,18 @@ public class Square implements Object{
         return squareX;
     }
 
-    public void setSquareX(float squareX) {
-        this.squareX = squareX;
-    }
+
 
     @Override
     public float getY() {
         return squareY;
     }
 
-    public void setY(float squareY) {
-        this.squareY = squareY;
-    }
+
 
     public float[] getSize() {
         return size;
     }
 
-    public void setSize(float[] size) {
-        this.size = size;
-    }
+
 }

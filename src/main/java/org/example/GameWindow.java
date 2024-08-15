@@ -6,6 +6,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import java.nio.*;
+import java.util.List;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -17,6 +18,10 @@ public class GameWindow {
 
     private long window;
 
+    private String side = "";
+
+    Grid grid = new Grid(800, 600, 50);  // 50 - розмір комірки
+
     private Person person = new Person(
             0.0f,
             0.0f,
@@ -24,11 +29,12 @@ public class GameWindow {
 
     private Square[] squares = new Square[]{
             new Square(
-                    -0.5f,
-                    -0.5f, new float[]{0.1f, 0.1f}),
+                    0.3f,
+                    0.5f, new float[]{0.2f, 0.1f}),
             new Square(
                     1.0f,
                     1.0f, new float[]{0.1f, 0.1f})
+
     };
 
     public void run() {
@@ -91,20 +97,43 @@ public class GameWindow {
     private void loop() {
         // Ініціалізація OpenGL
         GL.createCapabilities();
+        for (Square square : squares) {
+            grid.addSquare(square);
+        }
 
         // Головний цикл гри
         while (!glfwWindowShouldClose(window)) {
+
+
             // Очистка екрану перед рендерингом нового кадру
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             // Зміна кольору фону
             glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
 
+
             // Обробка вводу з клавіатури
             processInput();
 
 
-            renderGrid(0.1f, 1.0f, 1.0f);
+
+            List<Object> nearbySquares = grid.getNearbySquares(person);
+
+            for (Object object : nearbySquares) {
+                if (person.checkCollision(object)) {
+
+                    person.moveX(side == "L" ? 1f : 0f);
+                    person.moveX(side == "R" ? -1f : 0f);
+
+                    person.moveY(side == "D" ? 1f : 0f);
+                    person.moveY(side == "U" ? -1f : 0f);
+
+                }
+            }
+
+
+
+
 
             // Рендеринг квадрата
             person.renderObject();
@@ -120,24 +149,30 @@ public class GameWindow {
     }
 
     private void processInput() {
-        // Перевірка натискання клавіші ВЛІВО
-        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-            person.moveX(-1);
-        }
 
-        // Перевірка натискання клавіші ВПРАВО
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-            person.moveX(1);
-        }
 
-        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-            person.moveY(-1);
-        }
+            // Перевірка натискання клавіші ВЛІВО
+            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+                person.moveX(-1);
+                side = "L";
+            }
 
-        // Перевірка натискання клавіші ВГОРУ
-        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-            person.moveY(1);
-        }
+            // Перевірка натискання клавіші ВПРАВО
+            if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+                person.moveX(1);
+                side = "R";
+            }
+
+            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+                person.moveY(-1);
+                side = "D";
+            }
+
+            // Перевірка натискання клавіші ВГОРУ
+            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+                person.moveY(1);
+                side = "U";
+            }
 
     }
 
@@ -159,23 +194,6 @@ public class GameWindow {
 
         glEnd();
     }
-
-
-//    private boolean checkCollision() {
-//        float[] personPos = {person.getPersonX(), person.getPersonY()};
-//        float[] personSize = person.getSize();
-//
-//
-//        float[] squarePos = {square.getSquareX(), square.getSquareY()};
-//        float[] squareSize = square.getSize();
-//
-//        return (personPos[0] + personSize[0] > squarePos[0] - squareSize[0] &&
-//                personPos[0] - personSize[0] < squarePos[0] + squareSize[0] &&
-//                personPos[1] + personSize[1] > squarePos[1] - squareSize[1] &&
-//                personPos[1] - personSize[1] < squarePos[1] + squareSize[1]);
-//
-//    }
-
 
 
     public static void main(String[] args) {
