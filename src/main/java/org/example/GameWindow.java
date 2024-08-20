@@ -20,7 +20,7 @@ public class GameWindow {
 
     private String side = "";
 
-    Grid grid = new Grid(800, 600, 50);  // 50 - розмір комірки
+    Grid grid = new Grid(80, 60, 50);  // 50 - розмір комірки
 
     private Person person = new Person(
             0.0f,
@@ -30,7 +30,7 @@ public class GameWindow {
     private Square[] squares = new Square[]{
             new Square(
                     0.3f,
-                    0.5f, new float[]{0.2f, 0.1f}),
+                    0.5f, new float[]{0.1f, 0.1f}),
             new Square(
                     1.0f,
                     1.0f, new float[]{0.1f, 0.1f})
@@ -117,24 +117,6 @@ public class GameWindow {
 
 
 
-            List<Object> nearbySquares = grid.getNearbySquares(person);
-
-            for (Object object : nearbySquares) {
-                if (person.checkCollision(object)) {
-
-                    person.moveX(side == "L" ? 1f : 0f);
-                    person.moveX(side == "R" ? -1f : 0f);
-
-                    person.moveY(side == "D" ? 1f : 0f);
-                    person.moveY(side == "U" ? -1f : 0f);
-
-                }
-            }
-
-
-
-
-
             // Рендеринг квадрата
             person.renderObject();
             for(Square square : squares) {
@@ -154,24 +136,44 @@ public class GameWindow {
             // Перевірка натискання клавіші ВЛІВО
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
                 person.moveX(-1);
-                side = "L";
+                for (Object object : squares) {
+
+                    if (person.checkCollision(object)) {
+                        person.moveX(1);
+                    }
+                }
             }
 
             // Перевірка натискання клавіші ВПРАВО
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
                 person.moveX(1);
-                side = "R";
+                for (Object object : squares) {
+
+                    if (person.checkCollision(object)) {
+                        person.moveX(-1);
+                    }
+                }
             }
 
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
                 person.moveY(-1);
-                side = "D";
+                for (Object object : squares) {
+
+                    if (person.checkCollision(object)) {
+                        person.moveY(1);
+                    }
+                }
             }
 
             // Перевірка натискання клавіші ВГОРУ
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
                 person.moveY(1);
-                side = "U";
+                for (Object object : squares) {
+
+                    if (person.checkCollision(object)) {
+                        person.moveY(-1);
+                    }
+                }
             }
 
     }

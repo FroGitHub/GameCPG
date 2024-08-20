@@ -30,13 +30,13 @@ public class Person implements Object, Movable, Camera {
     }
 
     @Override
-    public void moveX(float leftOrRight){
+    public void moveX(float leftOrRight) {
         setPersonX(personX + speed * leftOrRight);
         moveCameraX(leftOrRight);
     }
 
     @Override
-    public void moveY(float upOrDown){
+    public void moveY(float upOrDown) {
         setPersonY(personY + speed * upOrDown);
         moveCameraY(upOrDown);
     }
@@ -48,8 +48,8 @@ public class Person implements Object, Movable, Camera {
 
         // Рендеринг квадрата з урахуванням його позиції по осі X
         glBegin(GL_QUADS);
-        glVertex2f(personX - size[0],  personY - size[1]); // Верхній лівий кут
-        glVertex2f(personX + size[0],  personY - size[1]); // Верхній правий кут
+        glVertex2f(personX - size[0], personY - size[1]); // Верхній лівий кут
+        glVertex2f(personX + size[0], personY - size[1]); // Верхній правий кут
         glVertex2f(personX + size[0], personY - -size[1]); // Нижній правий кут
         glVertex2f(personX - size[0], personY - -size[1]); // Нижній лівий кут
         glEnd();
@@ -81,18 +81,28 @@ public class Person implements Object, Movable, Camera {
     }
 
     public boolean checkCollision(Object object) {
-        float[] personPos = {getX(), getY()};
-        float[] personSize = getSize();
-
-
-        float[] squarePos = {object.getX(), object.getY()};
         float[] squareSize = object.getSize();
 
-        return (personPos[0] + personSize[0] > squarePos[0] - squareSize[0] &&
-                personPos[0] - personSize[0] < squarePos[0] + squareSize[0] &&
-                personPos[1] + personSize[1] > squarePos[1] - squareSize[1] &&
-                personPos[1] - personSize[1] < squarePos[1] + squareSize[1]);
+        // Перевірка перекриття по осі X
+        boolean xOverlap = (personX < object.getX() + squareSize[0]) &&
+                (personX + size[0] > object.getX());
 
+        // Перевірка перекриття по осі Y
+        boolean yOverlap = (personY < object.getY() + squareSize[1]) &&
+                (personY + size[1] > object.getY());
+
+        // Якщо є перекриття по обох осях, повертаємо true
+        return xOverlap && yOverlap;
     }
-
 }
+//    boolean xOverlap = (Math.round((personX + size[0]) * 100.0)
+//            == Math.round((object.getX() - squareSize[0]) * 100.0)) // Лівий уйобіщний бік сука
+//            && (Math.round((personX - size[0]) * 100.0) == Math.round((object.getX() + squareSize[0]) * 100.0)); // Правий уйобіщний бік сука
+//
+//    boolean yOverlap = (Math.round((personY + size[1]) * 100.0)
+//            == Math.round((object.getY() - squareSize[1]) * 100.0)) // ПІДАРАС ЗВЕРХУ!
+//            && (Math.round((personY - size[1]) * 100.0)
+//            == Math.round((object.getY() + squareSize[1]) * 100.0)); // ПІДАраС ЗнИЗУ!
+//
+//        System.out.println(xOverlap +  " : "  yOverlap);
+
