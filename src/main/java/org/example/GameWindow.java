@@ -18,8 +18,6 @@ public class GameWindow {
 
     private long window;
 
-    private String side = "";
-
     Grid grid = new Grid(80, 60, 50);  // 50 - розмір комірки
 
     private Person person = new Person(
@@ -33,7 +31,7 @@ public class GameWindow {
                     0.5f, new float[]{0.1f, 0.1f}),
             new Square(
                     1.0f,
-                    1.0f, new float[]{0.1f, 0.1f})
+                    1.0f, new float[]{0.3f, 0.1f})
 
     };
 

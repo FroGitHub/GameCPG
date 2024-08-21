@@ -84,16 +84,16 @@ public class Person implements Object, Movable, Camera {
         float[] squareSize = object.getSize();
 
         // Перевірка перекриття по осі X
-        boolean xOverlap = (personX < object.getX() + squareSize[0]) &&
-                (personX + size[0] > object.getX());
+        boolean xOverlap = (personX + size[0] * 2 > object.getX()) &&
+                (personX < object.getX() + squareSize[0] * 2);
 
         // Перевірка перекриття по осі Y
-        boolean yOverlap = (personY < object.getY() + squareSize[1]) &&
-                (personY + size[1] > object.getY());
+        boolean yOverlap = (personY + size[1] * 2 > object.getY()) &&
+                (personY < object.getY() + squareSize[1] * 2);
 
-        // Якщо є перекриття по обох осях, повертаємо true
         return xOverlap && yOverlap;
     }
+
 }
 //    boolean xOverlap = (Math.round((personX + size[0]) * 100.0)
 //            == Math.round((object.getX() - squareSize[0]) * 100.0)) // Лівий уйобіщний бік сука
@@ -105,4 +105,3 @@ public class Person implements Object, Movable, Camera {
 //            == Math.round((object.getY() + squareSize[1]) * 100.0)); // ПІДАраС ЗнИЗУ!
 //
 //        System.out.println(xOverlap +  " : "  yOverlap);
-
