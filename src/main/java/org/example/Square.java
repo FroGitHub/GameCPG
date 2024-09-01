@@ -24,10 +24,10 @@ public class Square implements Object{
 
         // Рендеринг квадрата з урахуванням його позиції по осі X
         glBegin(GL_QUADS);
-        glVertex2f(squareX - size[0],  squareY - size[1]); // Верхній лівий кут
-        glVertex2f(squareX + size[0],  squareY - size[1]); // Верхній правий кут
-        glVertex2f(squareX + size[0], squareY - -size[1]); // Нижній правий кут
-        glVertex2f(squareX - size[0], squareY - -size[1]); // Нижній лівий кут
+        glVertex2f(squareX - size[0],  squareY - size[1]); // Нижній лівий кут
+        glVertex2f(squareX + size[0],  squareY - size[1]); // Нижній правий кут
+        glVertex2f(squareX + size[0], squareY - -size[1] + 0.02f); // Верхній правий кут
+        glVertex2f(squareX - size[0], squareY - -size[1] + 0.02f); // Верхній лівий кут
         glEnd();
     }
 
