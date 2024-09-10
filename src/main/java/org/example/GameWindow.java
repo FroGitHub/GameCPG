@@ -39,6 +39,7 @@ public class GameWindow {
         System.out.println("LWJGL " + Version.getVersion() + "!");
 
         init();
+
         loop();
 
         // Звільнення ресурсів і завершення роботи
